@@ -7,6 +7,10 @@ body {
     width: 200px;
   }
 
+  .ship2{
+    width: 200px;
+  }
+
   img {
     width: 100%;
   }
@@ -17,3 +21,4 @@ body {
   position: absolute;
 }
   
+
