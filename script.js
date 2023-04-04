@@ -1,49 +1,39 @@
-// récupère le canvas
-const canvas = document.getElementById("canvas");
-const button = document.getElementById("bubble-add");
+let xSetter = gsap.utils.pipe(
+    gsap.utils.clamp(0, 100),    //make sure the number is between 0 and 100
+    gsap.utils.snap(5),          //snap to the closest increment of 5
+    gsap.quickSetter("#id", "x", "px") //apply it to the #id element's x property and append a "px" unit
+  );
 
-let bubbleNum = 5;
+//then later...
+xSetter(150) //sets the #el's transform to translateX(100px) (clamped to 100)
+xSetter(3)   //sets it to 5px (snapped)
 
-button.addEventListener("click", () => {
-  if (bubbleNum < 10) {
-    bubbleNum++;
-  }
-})
+gsap.set(".ship", {xPercent: -50, yPercent: -50});
 
-// définit la taille du canvas
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const ship = document.querySelector(".ship");
+const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+const mouse = { x: pos.x, y: pos.y };
+const speed = 0.2;
 
-// récupère le contexte 2D du canvas
-const context = canvas.getContext("2d");
+const xSet = gsap.quickSetter(ship, "x", "px");
+const ySet = gsap.quickSetter(ship, "y", "px");
 
-// tableau pour stocker les positions précédentes de la souris
-const positions = [];
-
-// écoute l'événement "mousemove" sur le canvas
-canvas.addEventListener("mousemove", (event) => {
-  // efface le canvas
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
-  // ajoute la position actuelle de la souris au tableau des positions
-  positions.unshift({ x: event.clientX, y: event.clientY });
-
-  // dessine les bulles à partir des positions stockées
-  const sizes = [30, 25, 20, 15, 10];
-  const colors = ["rgba(0, 0, 0, 1)", "rgba(0, 0, 0, .9)", "rgba(0, 0, 0, .8)", "rgba(0, 0, 0, .7)", "rgba(0, 0, 0, .6)", "rgba(0, 0, 0, .5)", "rgba(0, 0, 0, .4)", "rgba(0, 0, 0, .3)", "rgba(0, 0, 0, .2)", "rgba(0, 0, 0, .1)"];
-
-  for (let i = 0; i < bubbleNum; i++) {
-    const position = positions[i];
-    if (position) {
-      context.beginPath();
-      context.arc(position.x, position.y, sizes[i], 0, 2 * Math.PI);
-      context.fillStyle = colors[i];
-      context.fill();
-    }
-  }
-
-  // supprime les positions de souris supplémentaires si nécessaire
-  if (positions.length > 5) {
-    positions.pop();
-  }
+window.addEventListener("mousemove", e => {    
+  mouse.x = e.x;
+  mouse.y = e.y;  
 });
+
+gsap.ticker.add(() => {
+  
+  // adjust speed for higher refresh monitors
+  const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio()); 
+  
+  pos.x += (mouse.x - pos.x) * dt;
+  pos.y += (mouse.y - pos.y) * dt;
+  xSet(pos.x);
+  ySet(pos.y);
+});
+
+// special thanks to Blake Bowen for most of the code.
+
+// quickTo() version, new in version 3.10.0: https://codepen.io/GreenSock/pen/xxpbORN?editors=0010
