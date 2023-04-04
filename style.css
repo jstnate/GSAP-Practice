@@ -1,0 +1,19 @@
+body {
+    background: url('images/space.jpg');
+    text-align: center;
+  }
+  
+  .ship {
+    width: 200px;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  
+.line {
+  background: dodgerblue;
+  position: absolute;
+}
+  
