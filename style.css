@@ -3,3 +3,16 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+body{
+    background-image:url("images/space.jpg");
+}
+
+.ship {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  
